@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="fetch.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Chango&display=swap" rel="stylesheet">
+    <title>Movie Search</title>
+</head>
+
+<body>
+    <h1>Movie & Chill</h1>
+    <div id="divText">
+        <input type="text" id="textInput" oninput="getObject()" placeholder="Movie..">
+    </div>
+    <button id="btn">Search</button>
+    <img id="loading">
+    <div id="resultContain"></div>
+
+
+    <script>
+        const baseApi = 'https://api.tvmaze.com/search/shows?q='
+        function fetchObject(param) {
+
+            return fetch(`${baseApi}${param}`, {})
+            .then((res) => { return res.json() })
+            .catch((reject) => { return "not found" })
+
+        }
+    
+
+        let result = [];
+        async function getObject() {
+            resultContain.innerHTML='';
+            btn.innerHTML = `<i class="fa fa-spinner fa-spin" style="font-size:24px"></i>`
+            try {
+                result = await fetchObject(textInput.value);
+                result.forEach(showItem => {
+                    console.log(showItem)
+                    resultContain.innerHTML +=
+                    `<div class=box><h5>Show name:${showItem.show.name}<h5>
+                    <h5><img width=70px height:70px src=${showItem.show.image.medium}></h5>
+                    <h5><a href=${showItem.show.url}>Link</a></h5>
+                    <h5>Gener: ${showItem.show.genres}</h5>
+                    </div>`
+
+                });
+            }
+            catch (rej) {
+                resultContain.innerHTML += rej;
+
+            }
+            finally {
+                btn.innerHTML = 'Search'
+
+            }
+        }
+    </script>
+
+</body>
+
+</html>
